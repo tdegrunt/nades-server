@@ -77,7 +77,6 @@ app.post('/update', function(req, res) {
   ed.created_at = new Date(data["s"]);
   ed.save();
 
-  sys.puts(JSON.stringify(req.body));
   res.send("OK");
 });
 
