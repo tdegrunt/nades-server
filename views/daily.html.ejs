@@ -1,0 +1,32 @@
+<h1>Daily</h1>
+Daily statistics
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:["corechart"]});
+  google.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Year');
+    data.addColumn('number', 'Average Watt');
+    data.addRows(<%=sensorData.length%>);
+    
+    <%
+    for(var i=0; i < sensorData.length; i++) {
+      var reading = sensorData[i];
+
+      var timestamp = sensorData[i]["created_at"].getTime();
+
+      %>
+        data.setValue(<%=i%>, 0, "<%=sensorData[i]["created_at"]%>");
+        data.setValue(<%=i%>, 1, <%=reading["average"]%>);
+        // <%=new Date(timestamp)%>
+      <%
+    };
+    %>    
+
+    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+    chart.draw(data, {width: 640, height: 480, title: 'Electricity'});
+  }
+</script>
+<div id="chart_div"></div>

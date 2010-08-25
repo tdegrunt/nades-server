@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset=utf-8 />
+<title>Graphing test</title>
+<script type="text/javascript" src="javascripts/raphael-min.js"></script>
+<script type="text/javascript" src="javascripts/g.raphael-min.js"></script>
+<script type="text/javascript" src="javascripts/g.line-min.js"></script>
+<script type="text/javascript">
+	window.onload = function () {
+		var r = Raphael(10, 50, 640, 480);
+	
+        var x = [], y = [];
+        for (var i = 0; i < 1e6; i++) {
+            x[i] = i * 10;
+            y[i] = (y[i - 1] || 0) + (Math.random() * 7) - 3;
+        }
+
+        r.g.linechart(20, 50, 600, 400, x, [y.slice(0, 1e3)], {axis: "0 0 1 1", smooth: true});
+	};
+</script>
+</head>
+<body>
+</body>
+</html>
