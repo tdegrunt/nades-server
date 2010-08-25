@@ -18,7 +18,7 @@ Daily statistics
       var timestamp = sensorData[i]["created_at"].getTime();
 
       %>
-        data.setValue(<%=i%>, 0, "<%=sensorData[i]["created_at"]%>");
+        data.setValue(<%=i%>, 0, "<%=sensorData[i]["created_at"].toLocaleTimeString()%>");
         data.setValue(<%=i%>, 1, <%=reading["average"]%>);
         // <%=new Date(timestamp)%>
       <%

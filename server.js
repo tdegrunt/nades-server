@@ -81,7 +81,10 @@ app.post('/update', function(req, res) {
 });
 
 app.get('/frontend/daily', function(req, res) {
-  EnergyData.find({"type":"power"}).all(function(docs){
+  var now = new Date();
+  var start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  var end = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1);
+  EnergyData.find({"type":"power","created_at":{"$gte": start, "$lt": end}}).all(function(docs){
     res.render('daily.html.ejs', {
       locals: {
         sensorData: docs
