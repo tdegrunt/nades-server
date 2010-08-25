@@ -41,7 +41,7 @@ mongoose.model('EnergyData', {
 
 });
 
-var db = mongoose.connect('mongodb://localhost/naem');
+var db = mongoose.connect('mongodb://localhost/nades');
 
 var EnergyData = db.model('EnergyData');
 

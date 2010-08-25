@@ -1,7 +1,7 @@
 Name
 ----
 
-NEAM Server - Server counter part for NADES
+nades-server - Server counter part for NADES
 
 Description
 -----------
