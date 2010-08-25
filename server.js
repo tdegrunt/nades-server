@@ -51,9 +51,9 @@ var EnergyData = db.model('EnergyData');
 var app = express.createServer();
 
 app.configure(function() {
-  express.logger(),
-  express.bodyDecoder(),
-  express.staticProvider(__dirname + '/public')
+  app.use(express.logger()),
+  app.use(express.bodyDecoder()),
+  app.use(express.staticProvider(__dirname + '/public'))
 });
 
 /*
