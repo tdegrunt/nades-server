@@ -22,19 +22,13 @@
 
 var express = require('express'),
   sys = require('sys'),
+  fs = require('fs'),
   mongoose = require('./vendor/mongoose/mongoose').Mongoose;
 
-console.log('Starting directory: ' + process.cwd());
-try {
-  process.chdir('/home/tdegrunt/nades-server');
-  console.log('New directory: ' + process.cwd());
-}
-catch (err) {
-  console.log('chdir: ' + err);
-}
+// Move to directory of script
+process.chdir(__dirname);
 
-var ENERGY_DATA_TYPES = {"p":"power","g":"gas","w":"water"};
-
+var ENERGY_DATA_TYPES = {"p":"power","g":"gas","w":"water"};  
 
 mongoose.model('EnergyData', {
 
@@ -54,11 +48,13 @@ var db = mongoose.connect('mongodb://localhost/nades');
 
 var EnergyData = db.model('EnergyData');
 
-var app = express.createServer(
-    express.logger(),
-    express.bodyDecoder(),
-    express.staticProvider(__dirname + '/public')
-);
+var app = express.createServer();
+
+app.configure(function() {
+  express.logger(),
+  express.bodyDecoder(),
+  express.staticProvider(__dirname + '/public')
+});
 
 /*
  * Returns the time in unix date/time stamp
@@ -96,3 +92,7 @@ app.get('/frontend/daily', function(req, res) {
 });
 
 app.listen(8000);
+
+
+
+
