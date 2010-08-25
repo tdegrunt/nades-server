@@ -24,6 +24,15 @@ var express = require('express'),
   sys = require('sys'),
   mongoose = require('./vendor/mongoose/mongoose').Mongoose;
 
+console.log('Starting directory: ' + process.cwd());
+try {
+  process.chdir('/home/tdegrunt/nades-server');
+  console.log('New directory: ' + process.cwd());
+}
+catch (err) {
+  console.log('chdir: ' + err);
+}
+
 var ENERGY_DATA_TYPES = {"p":"power","g":"gas","w":"water"};
 
 
