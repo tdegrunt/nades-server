@@ -87,22 +87,37 @@ app.get('/frontend/daily/:year?/:month?/:date?', function(req, res) {
   }
   var start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   var end = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1);
+
+  var power = {};
+  var gas = {};
+
   var query = EnergyData.find({"type":"power","created_at":{"$gte": start, "$lt": end}}).sort([["created_at",1]]);
-  var firstData;
-  var lastData;
   query.first(function(result){
-      firstData = result;
+    power["first"] = result;
   }).last(function(result){
-      lastData = result;
+    power["last"] = result;
   }).all(function(docs){
-    res.render('daily.html.ejs', {
-      locals: {
-        sensorData: docs,
-        firstData: firstData,
-        lastData: lastData
-      }
+    power["all"] = docs;
+    
+    var query = EnergyData.find({"type":"gas","created_at":{"$gte": start, "$lt": end}}).sort([["created_at",1]]);
+    query.first(function(result){
+      gas["first"] = result;
+    }).last(function(result){
+      gas["last"] = result;
+    }).all(function(docs){
+      gas["all"] = docs;
+
+      res.render('daily.html.ejs', {
+        locals: {
+          power: power,
+          gas: gas
+        }
+      });
+      
     });
+    
   });
+  
 });
 
 app.listen(8000);

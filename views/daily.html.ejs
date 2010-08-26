@@ -1,8 +1,8 @@
 <h1>Daily</h1>
-Daily statistics
+Daily statistics<br />
 
 <%
-  if (sensorData.length > 0) {
+  if (power['all'].length > 0) {
 %>
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
@@ -13,22 +13,48 @@ Daily statistics
     data.addColumn('string', 'Year');
     data.addColumn('number', 'Watt');
     data.addRows([<%
-      sensorData.forEach(function(item){
+      power['all'].forEach(function(item){
       var timestamp = item["created_at"].getTime();
     %>["<%=item["created_at"].toLocaleTimeString()%>", <%=item["average"]%>],<%
       });
     %>
     ]);
 
-    var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+    var chart = new google.visualization.AreaChart(document.getElementById('power_chart_div'));
     chart.draw(data, {width: 640, height: 480, title: 'Average power use',
                       hAxis: {title: 'Time', titleTextStyle: {color: '#336699'}}
                      });
   }
 </script>
-<div id="chart_div"></div>
+<div id="left" style="float: left;">
+<div id="power_chart_div"></div>
 
-Total usage: <%=Math.round((lastData['total']-firstData['total'])*10000)/10000%> kWh
+Total usage: <%=Math.round((power['last']['total']-power['first']['total'])*10000)/10000%> kWh
+</div>
+
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:["corechart"]});
+  google.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Year');
+    data.addColumn('number', 'dm3');
+    data.addRows([<%
+      gas['all'].forEach(function(item){
+      var timestamp = item["created_at"].getTime();
+    %>["<%=item["created_at"].toLocaleTimeString()%>", <%=item["average"]%>],<%
+      });
+    %>
+    ]);
+
+    var chart = new google.visualization.AreaChart(document.getElementById('gas_chart_div'));
+    chart.draw(data, {colors:['red','#004411'], width: 640, height: 480, title: 'Average gas use',
+                      hAxis: {title: 'Time', titleTextStyle: {color: '#336699'}}
+                     });
+  }
+</script>
+<div id="gas_chart_div"></div>
+
 <%
   } else {
 %>
