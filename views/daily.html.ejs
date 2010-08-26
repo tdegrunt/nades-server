@@ -1,6 +1,9 @@
 <h1>Daily</h1>
 Daily statistics
 
+<%
+  if (sensorData.length > 0) {
+%>
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
   google.load("visualization", "1", {packages:["corechart"]});
@@ -8,25 +11,29 @@ Daily statistics
   function drawChart() {
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Year');
-    data.addColumn('number', 'Average Watt');
-    data.addRows(<%=sensorData.length%>);
-    
-    <%
-    for(var i=0; i < sensorData.length; i++) {
-      var reading = sensorData[i];
+    data.addColumn('number', 'Watt');
+    data.addRows([<%
+      sensorData.forEach(function(item){
+      var timestamp = item["created_at"].getTime();
+    %>["<%=item["created_at"].toLocaleTimeString()%>", <%=item["average"]%>],<%
+      });
+    %>
+    ]);
 
-      var timestamp = sensorData[i]["created_at"].getTime();
-
-      %>
-        data.setValue(<%=i%>, 0, "<%=sensorData[i]["created_at"].toLocaleTimeString()%>");
-        data.setValue(<%=i%>, 1, <%=reading["average"]%>);
-        // <%=new Date(timestamp)%>
-      <%
-    };
-    %>    
-
-    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-    chart.draw(data, {width: 640, height: 480, title: 'Electricity'});
+    var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+    chart.draw(data, {width: 640, height: 480, title: 'Average power use',
+                      hAxis: {title: 'Time', titleTextStyle: {color: '#336699'}}
+                     });
   }
 </script>
 <div id="chart_div"></div>
+
+Total usage: <%=Math.round((lastData['total']-firstData['total'])*10000)/10000%> kWh
+<%
+  } else {
+%>
+  <p />
+  No data
+<%
+  }
+%>

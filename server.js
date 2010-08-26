@@ -83,14 +83,23 @@ app.post('/update', function(req, res) {
 app.get('/frontend/daily/:year?/:month?/:date?', function(req, res) {
   var now = new Date();
   if (req.params.year && req.params.month && req.params.date) {
-    now = new Date(req.params.year, req.params.month, req.params.date);
+    now = new Date(req.params.year, req.params.month-1, req.params.date);
   }
   var start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   var end = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1);
-  EnergyData.find({"type":"power","created_at":{"$gte": start, "$lt": end}}).all(function(docs){
+  var query = EnergyData.find({"type":"power","created_at":{"$gte": start, "$lt": end}}).sort([["created_at",1]]);
+  var firstData;
+  var lastData;
+  query.first(function(result){
+      firstData = result;
+  }).last(function(result){
+      lastData = result;
+  }).all(function(docs){
     res.render('daily.html.ejs', {
       locals: {
-        sensorData: docs
+        sensorData: docs,
+        firstData: firstData,
+        lastData: lastData
       }
     });
   });
