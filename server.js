@@ -73,7 +73,7 @@ app.post('/update', function(req, res) {
     var ed = new EnergyData({
         type: ENERGY_DATA_TYPES[sensorInfo["n"]], 
         total: sensorInfo["t"], current: sensorInfo["c"], average: sensorInfo["a"], 
-        created_at = new Date(sensorInfo["s"])});
+        created_at: new Date(sensorInfo["s"])});
     ed.save();
   });
 
