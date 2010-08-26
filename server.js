@@ -68,14 +68,14 @@ app.get('/time', function(req, res){
  */
 app.post('/update', function(req, res) {
   var data = req.body;
-
-  var ed = new EnergyData();
-  ed.type = ENERGY_DATA_TYPES[data["n"]];
-  ed.total = data["t"];
-  ed.current = data["c"];
-  ed.average = data["a"];
-  ed.created_at = new Date(data["s"]);
-  ed.save();
+  
+  data.forEach(function(sensorInfo){
+    var ed = new EnergyData({
+        type: ENERGY_DATA_TYPES[sensorInfo["n"]], 
+        total: sensorInfo["t"], current: sensorInfo["c"], average: sensorInfo["a"], 
+        created_at = new Date(sensorInfo["s"])});
+    ed.save();
+  });
 
   res.send("OK");
 });
