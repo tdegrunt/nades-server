@@ -69,11 +69,13 @@ app.get('/time', function(req, res){
 app.post('/update', function(req, res) {
   var data = req.body;
   
-  data.forEach(function(sensorInfo){
+  data['data'].forEach(function(sensorInfo){
     var ed = new EnergyData({
-        type: ENERGY_DATA_TYPES[sensorInfo["n"]], 
-        total: sensorInfo["t"], current: sensorInfo["c"], average: sensorInfo["a"], 
-        created_at: new Date(sensorInfo["s"])});
+        type: sensorInfo["name"], 
+        total: sensorInfo["total"], 
+        current: sensorInfo["current"], 
+        average: sensorInfo["average"], 
+        created_at: new Date(data["created_at"])});
     ed.save();
   });
 
