@@ -23,7 +23,8 @@
 var express = require('express'),
   sys = require('sys'),
   fs = require('fs'),
-  mongoose = require('mongoose').Mongoose;
+  mongoose = require('mongoose').Mongoose,
+  mongo = require('mongodb');
 
 // Move to directory of script
 process.chdir(__dirname);
@@ -122,7 +123,7 @@ app.get('/frontend/daily/:year?/:month?/:date?', function(req, res) {
   
 });
 
-app.get('/frontend/monthly/:year/:month', function(req, res){
+app.get('/frontend/monthly/:year?/:month?', function(req, res){
   
   var reduce = function (key, values) { 
     var ret = {
