@@ -23,7 +23,7 @@
 var express = require('express'),
   sys = require('sys'),
   fs = require('fs'),
-  mongoose = require('./vendor/mongoose/mongoose').Mongoose;
+  mongoose = require('mongoose').Mongoose;
 
 // Move to directory of script
 process.chdir(__dirname);

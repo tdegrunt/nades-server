@@ -1,0 +1,26 @@
+<h1>Monthly</h1>
+Monthly statistics<br />
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:["corechart"]});
+  google.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Year');
+    data.addColumn('number', 'kWh');
+    data.addRows([<%
+      
+      for(i = 0; i < power.length; i++) {
+        %>["<%=power[i]._id%>", <%=(power[i].value['max'] - power[i].value['min'])%>],<%
+      }      
+    %>
+    ]);
+
+    var chart = new google.visualization.ColumnChart(document.getElementById('power_chart_div'));
+    chart.draw(data, {width: 640, height: 480, title: 'Power use',
+                      hAxis: {title: 'Time', titleTextStyle: {color: '#336699'}},
+                     });
+  }
+</script>
+<div id="power_chart_div"></div>
