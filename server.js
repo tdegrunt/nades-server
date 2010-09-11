@@ -122,6 +122,58 @@ app.get('/frontend/daily/:year?/:month?/:date?', function(req, res) {
   
 });
 
+app.get('/frontend/monthly/:year/:month', function(req, res){
+  
+  var reduce = function (key, values) { 
+    var ret = {
+      'max': 0,
+      'min': 0
+    };
+
+    for(var i = 0; i < values.length; i++) {
+      var v = values[i];
+      if (v['max'] > ret['max'] || ret['max'] == 0 ) {
+        ret['max'] = v['max'];
+      }
+      if (v['min'] < ret['min'] || ret['min'] == 0 ) {
+        ret['min'] = v['min'];
+      }
+    }
+
+    return ret;
+  };
+  
+  var reduce = new mongo.Code(reduce.toString());
+  var map = new mongo.Code("function () { emit(new Date(this.created_at).toLocaleDateString(), {'max': this.total, 'min': this.total}); }");
+
+  var now = new Date();
+  if (req.params.year && req.params.month) {
+    now = new Date(req.params.year, req.params.month-1, 1);
+  }
+
+  var start = new Date(now.getFullYear(), now.getMonth(), 1);
+  var end = new Date(now.getFullYear(), now.getMonth()+1, 1);
+  
+  sys.puts("start: "+start);
+  sys.puts("end: "+end);
+
+  db.collection('energydatas').mapReduce(map, reduce, {"query":{"type": "power","created_at":{"$gte": start, "$lt":end}}}, function(err, coll) {
+      if (err==null) {
+        coll.find({},{}, function(err, cursor) {
+          cursor.toArray(function(err, docs) {
+            
+            res.render('monthly.html.ejs', {
+              locals: {
+                power: docs,
+              }
+            });
+
+          });
+        });
+      } 
+  });
+});
+
 app.listen(8000);
 
 
